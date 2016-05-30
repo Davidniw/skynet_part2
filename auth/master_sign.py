@@ -1,12 +1,27 @@
 import os
 
+from Crypto.PublicKey import RSA
+
+def create_key():
+    key = RSA.generate(4096)
+    file = open("master_key.pem", "wb")
+    file.write(key.exportKey("PEM"))
+    file.close()
+    return key
 
 def sign_file(f):
     # TODO: For Part 2, you'll use public key crypto here
     # The existing scheme just ensures the updates start with the line 'Caesar'
     # This is naive -- replace it with something better!
+    try:
+        file = open("master_key.pem", "rb")
+        key = RSA.importKey(file.read())
+        print("Key imported")
+    except FileNotFoundError:
+        key = create_key()
+        print("Key created")
+    print(key)
     return bytes("Caesar\n", "ascii") + f
-
 
 if __name__ == "__main__":
     fn = input("Which file in pastebot.net should be signed? ")

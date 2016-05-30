@@ -2,7 +2,7 @@ import os
 
 from auth.master_sign import sign_file
 from auth.master_view import decrypt_valuables
-
+from Crypto.PublicKey import RSA
 
 # Instead of storing files on disk,
 # we'll save them in memory for simplicity
@@ -11,7 +11,6 @@ filestore = {}
 valuables = []
 
 ###
-
 def save_valuable(data):
     valuables.append(data)
 
