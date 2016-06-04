@@ -6,6 +6,7 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
+from Crypto.Cipher import AES
 
 def decrypt_valuables(f):
     #Check if a key pair exsits, if not, exit
@@ -18,7 +19,14 @@ def decrypt_valuables(f):
     # The existing scheme uploads in plaintext
     # As such, we just convert it back to ASCII and print it out
     cipher = PKCS1_OAEP.new(private_key, hashAlgo=SHA256)
-    decoded_text = cipher.decrypt(f)
+    # Take the RSA encrypted AES key from the file
+    key = cipher.decrypt(f[:512])
+    # Take the iv from the file
+    iv = f[512:528]
+    # Create the AES cipher using the AES key and iv from the file
+    AES_cipher = AES.new(key, AES.MODE_CFB, iv)
+    # Decrypt the file contents using the AES cipher
+    decoded_text = AES_cipher.decrypt(f[528:])
     print(decoded_text)
     return decoded_text
 
