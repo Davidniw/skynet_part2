@@ -1,5 +1,6 @@
 import os
 
+from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 
@@ -35,10 +36,11 @@ def verify_file(f):
     # Verify the file was sent by the bot master
     # TODO: For Part 2, you'll use public key crypto here
     # Naive verification by ensuring the first line has the "passkey"
-
+    f_signed = open(os.path.join("pastebot.net", "bitcoin.signed"), "rb").read()
+    hash = SHA256.new(f)
     puiblic_key = RSA.importKey(open("public_key.pem").read())
     verifier = PKCS1_v1_5.new(puiblic_key)
-    if verifier.verify(f, first_line):
+    if verifier.verify(hash, f_signed):
         return True
     return False
 
