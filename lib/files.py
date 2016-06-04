@@ -1,8 +1,7 @@
 import os
 
-from auth.master_sign import sign_file
-from auth.master_view import decrypt_valuables
 from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
 
 # Instead of storing files on disk,
 # we'll save them in memory for simplicity
@@ -16,7 +15,6 @@ def save_valuable(data):
 
 def encrypt_for_master(data):
     # Encrypt the file so it can only be read by the bot master
-    data = sign_file(data)
     return data
 
 def upload_valuables_to_pastebot(fn):
@@ -31,17 +29,18 @@ def upload_valuables_to_pastebot(fn):
     f.close()
 
     print("Saved valuables to pastebot.net/%s for the botnet master" % fn)
-
 ###
 
 def verify_file(f):
     # Verify the file was sent by the bot master
     # TODO: For Part 2, you'll use public key crypto here
     # Naive verification by ensuring the first line has the "passkey"
-    lines = f.split(bytes("\n", "ascii"), 1)
-    first_line = lines[0]
-    if first_line == bytes("Caesar", "ascii"):
+    key = RSA.importKey(open("master_key.pem").read())
+    verifier = PKCS1_v1_5.new(key.publickey)
+    if verifier.verify(f):
         return True
+    #if first_line == bytes("Caesar", "ascii"):
+    #    return True
     return False
 
 def process_file(fn, f):

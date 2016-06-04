@@ -1,6 +1,8 @@
 import os
 
+from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
 
 def create_key():
     key = RSA.generate(4096)
@@ -20,8 +22,11 @@ def sign_file(f):
     except FileNotFoundError:
         key = create_key()
         print("Key created")
-    print(key)
-    return bytes("Caesar\n", "ascii") + f
+    print(key) 
+    hash = SHA256.new(f)
+    signer = PKCS1_v1_5.new(key) #Needs to be changed to private key
+    signature = signer.sign(hash)
+    return signature
 
 if __name__ == "__main__":
     fn = input("Which file in pastebot.net should be signed? ")
