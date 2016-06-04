@@ -17,7 +17,7 @@ def decrypt_valuables(f):
     # TODO: For Part 2, you'll need to decrypt the contents of this file
     # The existing scheme uploads in plaintext
     # As such, we just convert it back to ASCII and print it out
-    cipher = PKCS1_OAEP.new(private_key, hashAlgo="SHA256")
+    cipher = PKCS1_OAEP.new(private_key, hashAlgo=SHA256)
     decoded_text = cipher.decrypt(f)
     print(decoded_text)
     return decoded_text

