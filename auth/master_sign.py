@@ -29,7 +29,8 @@ def sign_file(f):
     hash = SHA256.new(f)
     signer = PKCS1_v1_5.new(private_key)
     signature = signer.sign(hash)
-    return signature
+    print(len(signature))
+    return signature + f
 
 if __name__ == "__main__":
     fn = input("Which file in pastebot.net should be signed? ")
