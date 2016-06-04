@@ -6,8 +6,11 @@ from Crypto.Signature import PKCS1_v1_5
 
 def create_key():
     key = RSA.generate(4096)
-    file = open("master_key.pem", "wb")
+    file = open("private_key.pem", "wb")
     file.write(key.exportKey("PEM"))
+    file.close()
+    file = open("public_key.pem", "wb")
+    file.write(key.publickey().exportKey("PEM"))
     file.close()
     return key
 
@@ -16,15 +19,15 @@ def sign_file(f):
     # The existing scheme just ensures the updates start with the line 'Caesar'
     # This is naive -- replace it with something better!
     try:
-        file = open("master_key.pem", "rb")
-        key = RSA.importKey(file.read())
-        print("Key imported")
+        file = open("private_key.pem", "rb")
+        private_key = RSA.importKey(file.read())
+        print("Key imported.")
     except FileNotFoundError:
-        key = create_key()
-        print("Key created")
-    print(key) 
+        private_key = create_key()
+        print("Key created.")
+    print(private_key) 
     hash = SHA256.new(f)
-    signer = PKCS1_v1_5.new(key) #Needs to be changed to private key
+    signer = PKCS1_v1_5.new(private_key)
     signature = signer.sign(hash)
     return signature
 
