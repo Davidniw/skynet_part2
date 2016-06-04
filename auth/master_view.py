@@ -6,11 +6,13 @@ import os
 
 def decrypt_valuables(f):
     #Check if a key pair exsits, if not, exit
-    if not os.path.exists(masterkey.pem):
-        print("No key pair has been initialised")
+    try:
+        file = open("master_key.pem", "rb")
+        key = RSA.importKey(file.read())
+        # Import key from file
+        print("Key imported")
+    except FileNotFoundError:
         os.exit(1)
-    # Import key from file
-    key = RSA.importKey(open('masterkey.pem').read())
     # TODO: For Part 2, you'll need to decrypt the contents of this file
     # The existing scheme uploads in plaintext
     # As such, we just convert it back to ASCII and print it out
