@@ -32,9 +32,11 @@ class StealthConn(object):
             print("Shared hash: {}".format(shared_hash))
             # Set the key to the shared hash (should it always be the first 16?)
             self.key = shared_hash  
+        # Create an initial key pair for file sharing
         if self.server:
-            from auth.master_sign import create_key
-            create_key()
+             if not os.path.exists("private_key.pem"):
+                from auth.master_sign import create_key
+                create_key()
 
     def split_key(self, key):
          # Hash the shared key and split for encrypting, seeding and hashing
