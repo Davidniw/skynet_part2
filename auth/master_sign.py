@@ -25,11 +25,9 @@ def sign_file(f):
     except FileNotFoundError:
         private_key = create_key()
         print("Key created.")
-    print(private_key) 
     hash = SHA256.new(f)
     signer = PKCS1_v1_5.new(private_key)
     signature = signer.sign(hash)
-    print(len(signature))
     return signature + f
 
 if __name__ == "__main__":

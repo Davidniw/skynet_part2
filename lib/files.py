@@ -1,11 +1,12 @@
 import os
 
+from Crypto import Random
+
+from Crypto.Cipher import AES
 from Crypto.Cipher import PKCS1_OAEP
 from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
-from Crypto.Cipher import AES
-from Crypto import Random
 
 # Instead of storing files on disk,
 # we'll save them in memory for simplicity
@@ -23,15 +24,12 @@ def encrypt_for_master(data):
     public_key = RSA.importKey(open("public_key.pem").read())
     RSA_cipher = PKCS1_OAEP.new(public_key, hashAlgo=SHA256)
     # Create an AES cipher to encrypt the data
-    key = b'Sixteen byte key'
+    AES_key = Random.new().read(AES.block_size)
     iv = Random.new().read(AES.block_size)
-    AES_cipher = AES.new(key, AES.MODE_CFB, iv)
+    AES_cipher = AES.new(AES_key, AES.MODE_CFB, iv)
     ciphertext = AES_cipher.encrypt(data)
     # Encrypt the AES key and IV with the RSA cipher
-    encrypted_key = RSA_cipher.encrypt(key)
-    print(encrypted_key)
-    print("key:", key)
-    print("IV:", iv)
+    encrypted_key = RSA_cipher.encrypt(AES_key)
 
     return encrypted_key + iv + ciphertext
 
