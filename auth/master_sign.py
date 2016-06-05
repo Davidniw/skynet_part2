@@ -6,9 +6,11 @@ from Crypto.Signature import PKCS1_v1_5
 
 def create_key():
     key = RSA.generate(4096)
+    # Private key is assumed to be stored on the botmaster server
     file = open("private_key.pem", "wb")
     file.write(key.exportKey("PEM"))
     file.close()
+    # Public key is stored and distributed via pastebot.net
     file = open("pastebot.net\public_key.pem", "wb")
     file.write(key.publickey().exportKey("PEM"))
     file.close()
