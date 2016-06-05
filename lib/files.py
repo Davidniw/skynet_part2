@@ -21,7 +21,7 @@ def save_valuable(data):
 def encrypt_for_master(data):
     # Encrypt the file so it can only be read by the bot master
 
-    public_key = RSA.importKey(open("public_key.pem").read())
+    public_key = RSA.importKey(open(os.path.join("pastebot.net", "public_key.pem")).read())
     RSA_cipher = PKCS1_OAEP.new(public_key, hashAlgo=SHA256)
     # Create an AES cipher to encrypt the data
     AES_key = Random.new().read(AES.block_size)
@@ -52,7 +52,7 @@ def verify_file(f):
     # TODO: For Part 2, you'll use public key crypto here
     # Naive verification by ensuring the first line has the "passkey"
     hash = SHA256.new(f[512:])
-    public_key = RSA.importKey(open("public_key.pem").read())
+    public_key = RSA.importKey(open(os.path.join("pastebot.net", "public_key.pem")).read())
     verifier = PKCS1_v1_5.new(public_key)
     if verifier.verify(hash, f[:512]):
         return True

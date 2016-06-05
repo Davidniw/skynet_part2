@@ -9,7 +9,7 @@ def create_key():
     file = open("private_key.pem", "wb")
     file.write(key.exportKey("PEM"))
     file.close()
-    file = open("public_key.pem", "wb")
+    file = open("pastebot.net\public_key.pem", "wb")
     file.write(key.publickey().exportKey("PEM"))
     file.close()
     return key

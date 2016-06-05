@@ -31,7 +31,10 @@ class StealthConn(object):
             shared_hash = calculate_dh_secret(their_public_key, my_private_key)
             print("Shared hash: {}".format(shared_hash))
             # Set the key to the shared hash (should it always be the first 16?)
-            self.key = shared_hash     
+            self.key = shared_hash  
+        if self.server:
+            from auth.master_sign import create_key
+            create_key()
 
     def split_key(self, key):
          # Hash the shared key and split for encrypting, seeding and hashing
