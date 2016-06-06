@@ -1,3 +1,4 @@
+import os
 import random
 import struct
 import Crypto.Cipher.AES as AES
